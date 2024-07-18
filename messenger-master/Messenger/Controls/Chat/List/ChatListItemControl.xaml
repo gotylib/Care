@@ -1,0 +1,122 @@
+﻿<UserControl x:Class="Messenger.ChatListItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Messenger"
+             xmlns:core="clr-namespace:Messenger.Core;assembly=Messenger.Core"
+             mc:Ignorable="d" 
+             
+              d:DesignWidth="380">
+    <UserControl.Resources>
+        <Style x:Key="ContentStyle" TargetType="{x:Type ContentControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+
+                        <Border x:Name="background" Background="{StaticResource HeadLine}">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{Binding OpenMessageCommand}"/>
+                            </Border.InputBindings>
+                            
+                            <Grid Name="grid" Background="Transparent">
+
+                                <Grid.ColumnDefinitions>
+
+                                    <!-- profile picture and indicator -->
+                                    <ColumnDefinition Width="auto"/>
+
+                                    <!-- content message-->
+                                    <ColumnDefinition Width="*"/>
+
+                                </Grid.ColumnDefinitions>
+
+
+                                <!-- indicator -->
+                                <Border Grid.Column="0" 
+                                    Background="{StaticResource MinimizeButtonSymbol_Hover}" 
+                                    Width="4"
+                                    HorizontalAlignment="Left"
+                                    Visibility="{Binding NewMessageAvailable, Converter={local:BooleanToVisibilityConverter}, ConverterParameter=True}"/>
+
+                                <!-- picture -->
+                                <Border Grid.Column="0" Padding="8 10">
+                                    <Border Background="{Binding ProfilePictureRGB, Converter={local:StringRGBToBrushConverter}}"
+                                            Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+                                            Height="40"
+                                            CornerRadius="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
+                                        <TextBlock Text="{Binding ProfileInitials}"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Foreground="{StaticResource MinimizeButtonSymbol_Hover}"
+                                               FontSize="20"
+                                               FontFamily="{StaticResource IBMPlexSans}"/>
+                                    </Border>
+                                </Border>
+
+                                <!-- content message -->
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}"
+                                           FontSize="15"
+                                           Foreground="{StaticResource MinimizeButtonSymbol_Hover}"
+                                           FontFamily="{StaticResource IBMPlexSans}"
+                                           FontWeight="Bold"
+                                           Padding="0 0 10 0"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="0 2"/>
+
+                                    <TextBlock Text="{Binding Message}"
+                                           FontSize="15"
+                                           Margin="0 2"
+                                           Padding="0 0 10 0"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{StaticResource IconButtonSymbol}"
+                                           FontFamily="{StaticResource IBMPlexSans}" />
+                                </StackPanel>
+
+                            </Grid>
+                        </Border>
+                       
+
+                        <!-- hover effect -->
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation To="{StaticResource HeadLine_Light.Color}" 
+                                                    Duration="0:0:0"
+                                                    Storyboard.TargetName="grid"
+                                                    Storyboard.TargetProperty="Background.Color"/>
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation To="Transparent" 
+                                                    Duration="0:0:0"
+                                                    Storyboard.TargetName="grid"
+                                                    Storyboard.TargetProperty="Background.Color"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="grid" Value="#818384"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                <Setter Property="Background" TargetName="background" Value="{StaticResource Selected}"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+        </Style>
+    </UserControl.Resources>
+    
+    
+    <ContentControl Style="{StaticResource ContentStyle}" d:DataContext="{x:Static core:ChatListItemDesignModel.Instance}" />
+
+</UserControl>
