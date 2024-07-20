@@ -1,6 +1,7 @@
 ﻿using CryptoCactus.Domain.Markets.Abstract;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -17,10 +18,10 @@ namespace CryptoCactus.Domain.Markets.KucoinExchanges
 
         public override async Task GetOnlyOneCurrencByAPIAsync(string nameOfCurrenc, string? apiKey = null, string? apiSecret = null)
         {
-            string url = string.Concat("https://api.kucoin.com/api/v1/market/stats?symbol=", string.Concat(nameOfCurrenc.ToLower(), "-USDT"));
+            string url = string.Concat("https://api.kucoin.com/api/v1/market/stats?symbol=", string.Concat(nameOfCurrenc, "-USDT"));
             var kLineInfo = await httpConnector.HttpConnect(url);
             var result = JsonSerializer.Deserialize<KucoinResponseSerialaze>(kLineInfo);
-            CurrenciesAppender(nameOfCurrenc, double.Parse(result.data[0][0].last));
+            CurrenciesAppender(nameOfCurrenc, double.Parse(result.data.last, CultureInfo.InvariantCulture));
         }
     }
 }

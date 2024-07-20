@@ -10,7 +10,7 @@ namespace CryptoCactus.Domain.Markets.KucoinExchanges
     public class KucoinResponseSerialaze
     {
         public string code { get; set; }
-        public List<List<Data>> data { get; set; }
+    public Data data { get; set; }
     }
     public class Data
     {
